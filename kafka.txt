@@ -32,5 +32,5 @@ kafka-console-producer --broker-list localhost:29092 --topic meu-topico-legal
 para alterar a 10 partition 
 kafka-topics --alter --bootstrap-server localhost:9092 --topic meu-topico-legal --partitions 10
 
-para trabalhar clm python e kafka
+para trabalhar com python e kafka
 pip3 install kafka-python
