@@ -1,0 +1,114 @@
+Entramos aqui:
+http://quickstart.cloudera:8888/hue/editor/?type=impala
+Que é o HUE
+abriimos no logo de dois archivos. HDFS.
+
+Manipular HDFS via terminal
+
+---------------------------------------------HDFS-----------------------------------------------
+
+
+wget https://cursos.grandeporte.com.br/files/fgv/publico-hdp.zip --no-check-certificate
+
+unzip publico-hdp.zip
+
+cd publico-hdp
+
+
+ESSE COMANDO LISTA OS ARQUIVOS NA PASTA CLOUDERA
+hdfs dfs -ls
+hdfs dfs -ls /user/cloudera
+LISTAR ARQUIVOS DE OUTRA PASTA QUE NÃO É A DO USUARIO.
+NÃO TEM COMANDO CD
+PARA saber qué tem na pasta /tmp
+hdfs dfs -ls /tmp
+
+AQUI ELE CRIA UMA PASTA QUE SE CHAMA LIVROS NA PASTA USER/CLOUDERA.
+DA PARA VER ISSO PELO SITE DO HUE
+hdfs dfs -mkdir livros
+
+O PUT PASSA ARCHIVOS PARA O HDFS DENTRO DA PASTA LIVROS QUE ESTÁ NO HDFS.
+SE EU NÃO ESTIVER NA PASTA DO ARCHIVO OU FAÇO UM LS OU PASSO O CAMINHO INTEIRO DO ARCHIVO.
+hdfs dfs  -put melville-moby-106.txt livros
+
+
+ESSE MOSTRA AS PRIMEIRAS LINHAS DO ARQUIVO
+hdfs dfs  -cat livros/melville-moby-106.txt
+SE NÃO ESTOU DENTRO DA PASTA DO ARCHIVO DOU O CAMINHO ABSOLUTO
+hdfs dfs -cat /tmp/emp_data.csv
+
+
+
+
+
+1. Hadoop fs: Este comando pode funcionar em todos os subsistemas do Hadoop.
+2. Hadoop dfs: especificamente para sistema de arquivos distribuídos HDFS.
+3. HDFS dfs: especificamente para sistemas de arquivos distribuídos HDFS. Ao usar hadoop
+dfs, o interno será convertido para comando hdfs dfs
+
+//verificando fator de replicação
+fazem a mesma coisa. Dizem o fator de replicação:
+-STAT É STATUS E %R PARA FATOR DE REPLICAÇÃO
+hadoop fs -stat %r livros/melville-moby-106.txt
+hadoop dfs -stat %r livros/melville-moby-106.txt
+
+PARA MODIFICAR O FATOR DE REPLICAÇÃO
+SET REP: SET REPETIÇÃO
+hadoop fs -setrep 3 livros/melville-moby-106.txt
+ELE ACEITA MUDAR DE NOVO PARA 1
+ESTE MUDA PARA TODO QUE ESTPA NA PASTA PARA FATOR DE REPLICAÇÃO 3
+hadoop fs -setrep 3 livros/
+_______________________________________________________________________
+EXERCÍCIO:
+
+
+CRIA UMA PASTA
+hdfs dfs -mkdir /locacao
+
+MUDAMOS PARA ESSA PASTA 
+cd /locacao
+
+TODOS OS ARCHIVOS DE NOSSA PASTA QUE SEJAM .CSV ENTÃO VAI PASSAR NA PASTA /LOCACAO
+hdfs dfs -put *.csv /locacao
+
+LISTAR O QUE TEM EM LOCACAO
+hdfs dfs -ls /locacao
+
+VER O INICIO DO ARCHIVO CLIENTE.CSV
+hdfs dfs  -cat  /locacao/clientes.csv
+
+
+criar pasa
+hdfs dfs -mkdir /tmp/livros
+EXCLUIR UMA PASTA: precisa do -r para que seja recursivo. Se for só um archivo não precisa -r
+hdfs dfs -rm -r /tmp/livros
+
+------------------------------------MapReduce--------------------------------------------------------
+
+--- Aqui é para ver como funciona mas a gente quase não faz isso
+
+--- Criar pastas para deixar os dados de entrada no HDFS
+
+hadoop fs -mkdir /user/cloudera/wordcount /user/cloudera/wordcount/input 
+--- Temos que passar o archivo para onde está o input no HDFS
+hdfs dfs -put melville-moby-106.txt /user/cloudera/wordcount/input
+
+
+--- Na pasta onde estamos fazemos uma carpeta 
+mkdir build
+
+--- Temos que compilar 2 coisas. O Java e o jar:
+
+-- compilar arquivos JAVA
+avac -cp /usr/lib/hadoop/*:/usr/lib/hadoop-mapreduce/* WordCount.java -d build -Xlint
+
+
+-- criar jar 
+
+jar -cvf wordcount.jar -C build/ 
+
+-- executar Map-Reduce
+
+hadoop jar wordcount.jar org.myorg.WordCount /user/cloudera/wordcount/input /user/cloudera/wordcount/output
+
+
