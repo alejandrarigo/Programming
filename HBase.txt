@@ -1,0 +1,63 @@
+Primeiro:
+
+Baixar o archivo na pasta downloads: Ir para a pasta downloads e 
+wget --no-check-certificate https://apagina/nome_archivo.csv
+
+Segundo
+Passar para o hdfs desde onde está a tabela:
+hdfs dfs -put nome_archivo.csv /tmp
+
+Terceiro:
+vamos em outro shell 
+hbase shell
+
+Cuarto: Criamos a tabela
+
+create 'nome_tabela', 'nome_familia_coluna1','nome_familia_coluna2'
+SEM a ROW KEY
+
+Quinto: damos um scan para ver que tal:
+
+scan 'nome_tabela'
+
+Sexto: Vou para o shell normal e ali rodo a importação:
+
+hbase org.apache.hadoop.hbase.mapreduce.ImportTsv -Dimporttsv.separator=',' -Dimporttsv.columns=HBASE_ROW_KEY,cf:nome_coluna1,cf:nome_coluna2,cf:nome_coluna3,cf:nome_coluna4,cf:nome_coluna5,cf:nome_coluna6 nome_tabela /tmp/nome_archivo.csv
+SEM A ROW KEY
+o cf: é para chamar família de colunas a essa coluna. Senão ele põe cada coluna como uma familia de tabela. Lembra que no momento de criar a gente fala quais as familias de tabelas.
+
+OBS:
+isso aqui cria a tabela 'emp_data' com todos essas familias de colunas. Nesse caso a importação será sem o cf.
+create 'emp_data', 'ename' , 'designation' , 'manager' , 'hire_date' , 'sal' , 'deptno'
+E assi importa: 
+hbase org.apache.hadoop.hbase.mapreduce.ImportTsv -Dimporttsv.separator=',' -Dimporttsv.columns=HBASE_ROW_KEY,ename,designation,manager,hire_date,sal,deptno emp_data /tmp/emp_data.csv
+
+
+Isso aqui cria uma tabela emp_data_2 com uma familia de colunas cf 
+create 'emp_data_2', 'cf'
+nesse caso devo importar dizendo em qual familia de coluna está:
+
+hbase org.apache.hadoop.hbase.mapreduce.ImportTsv -Dimporttsv.separator=',' -Dimporttsv.columns=HBASE_ROW_KEY,cf:nome_coluna1,cf:nome_coluna2,cf:nome_coluna3,cf:nome_coluna4,cf:nome_coluna5,cf:nome_coluna6 nome_tabela /tmp/nome_archivo.csv
+
+Aqui ele cri uma tabela com duas familias de colunas:
+create 'emp_data_3', 'personal_data','department_data'
+Aqui a importação
+
+hbase org.apache.hadoop.hbase.mapreduce.ImportTsv -Dimporttsv.separator=',' -Dimporttsv.columns=HBASE_ROW_KEY,personal_data:ename,personal_data:designation,department_data:manager,department_data:hire_date,department_data:sal,department_data:deptno emp_data_3 /tmp/emp_data.csv
+
+
+
+Setimo: Vou para o hbase shell e dou um scan para ver se está todo certo
+
+
+Para dropar uma tabela primeiro:
+disable 'nome_table'
+
+e logo:
+
+drop 'nome_tabela'
+
+GET:get 'emp_data_3', 7782, 'personal_data' mas o get só funciona com ROW-KEY 
+
+digitando só o comando no HBASE shell posso ver a documentação
+
