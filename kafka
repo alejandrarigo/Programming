@@ -1,0 +1,36 @@
+KAFKA
+
+zookeeper gerencia ou coordena os nó kafka
+
+
+Na aula: para executar no docker: 
+
+docker exec -it singlenode_kafka_1 /bin/bash 
+
+por padrão todas as mensagemns ficam armazenadas por 7 dias. a ordem é importante, ele considera. o kafka tem uma interface gráfica.
+
+
+kafka-topics da uma ajuda dos parámetros
+
+
+para criar um tópico com nome meu_topico
+kafka-topics --create --topic meu-topico --partitions 1 --replication-factor 1 --if-not-exists --bootstrap-server localhost:9092
+
+para deletar o mesmo topico
+kafka-topics --delete --topic meu-topico --bootstrap-server localhost:9092
+
+para descrever 
+kafka-topics --describe --topic meu-topico-legal --bootstrap-server localhost:9092
+
+para listar os topicos 
+kafka-topics --list --bootstrap-server localhost:9092
+
+deixa o consoole aberto para ir mandando mensagens
+
+kafka-console-producer --broker-list localhost:29092 --topic meu-topico-legal 
+
+para alterar a 10 partition 
+kafka-topics --alter --bootstrap-server localhost:9092 --topic meu-topico-legal --partitions 10
+
+para trabalhar clm python e kafka
+pip3 install kafka-python
