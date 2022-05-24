@@ -1,0 +1,170 @@
+
+------------------------------------------Hive--------------------------------------------------
+
+
+
+
+
+create database locacao;
+
+
+
+CREATE EXTERNAL TABLE CLIENTES (idcliente int, cnh string, cpf string, validadecnh date, nome string, datacadastro date, datanascimento date, telefone string, status string) 
+
+row format delimited fields terminated by ', ' STORED as TEXTFILE;
+
+
+
+LOAD DATA INPATH '/locacao/clientes.csv' INTO TABLE CLIENTES;
+
+
+
+SELECT * FROM CLIENTES;
+
+
+
+
+
+
+
+CREATE EXTERNAL TABLE VEICULOS (idveiculo int, dataaquisicao date, ano int , modelo string,
+
+placa string, status string, diaria double) row format delimited fields terminated by ', ' STORED as TEXTFILE;
+
+
+
+LOAD DATA INPATH '/locacao/veiculos.csv' INTO TABLE VEICULOS;
+
+
+
+SELECT * FROM VEICULOS;
+
+
+
+
+
+
+
+CREATE EXTERNAL TABLE DESPACHANTES (iddespachante int, nome string, status string , filial string) row format delimited fields terminated by ', ' STORED as TEXTFILE;
+
+
+
+LOAD DATA INPATH '/locacao/despachantes.csv' INTO TABLE DESPACHANTES;
+
+
+
+SELECT * FROM DESPACHANTES;
+
+
+
+
+
+
+
+CREATE EXTERNAL TABLE LOCACAO (idlocacao int, idcliente int, iddespachante int , idveiculo int, datalocacao date, dataentrega date, total double) row format delimited fields terminated by ', ' STORED as TEXTFILE;
+
+
+
+LOAD DATA INPATH '/locacao/locacao.csv' INTO TABLE LOCACAO;
+
+
+
+SELECT * FROM LOCACAO;
+
+
+
+
+
+
+
+select distinct modelo from VEICULOS;
+
+select * from VEICULOS where status <> 'Disponivel';
+
+select * from locacao inner join despachantes on (locacao.iddespachante = despachantes.iddespachante);
+
+select (veic.modelo), sum(loc.total) from locacao loc inner join veiculos veic on ( loc.idveiculo = veic.idveiculo) group by veic.modelo;
+
+
+
+select (veic.modelo), sum(loc.total) from locacao loc inner join veiculos veic on ( loc.idveiculo = veic.idveiculo)
+
+	inner join despachantes desp on (desp.iddespachante = loc.iddespachante)
+
+	group by veic.modelo, desp.nome;
+
+	
+
+select (veic.modelo), sum(loc.total) from locacao loc inner join veiculos veic on ( loc.idveiculo = veic.idveiculo)
+
+	inner join despachantes desp on (desp.iddespachante = loc.iddespachante)
+
+	group by veic.modelo, desp.nome
+
+	having sum(loc.total ) > 5000;	
+
+
+
+--------------------------------------------------------------------------------------------
+
+
+
+hdfs dfs -rm -r /user/root/
+
+
+
+mysql -u root -p 
+
+
+
+password: hortonworks1
+
+
+
+
+
+CREATE USER 'fabrizio'@'localhost' IDENTIFIED BY 'fgv';
+
+GRANT ALL PRIVILEGES ON *.* TO 'fabrizio'@'localhost';
+
+FLUSH PRIVILEGES;
+
+
+
+SOURCE employees.sql
+
+
+
+sqoop import --connect jdbc:mysql://localhost:3306/employees \
+
+--username root \
+
+--password hortonworks1 \
+
+--table employees \
+
+--split-by emp_no \
+
+--hive-import \
+
+--create-hive-table \
+
+--hive-table locacao.employees \
+
+--m  1;
+
+
+
+
+
+
+
+sqoop import-all-tables --connect jdbc:mysql://localhost/employees \
+--username root \
+--password hortonworks1 \
+--hive-import \
+--hive-overwrite \
+--hive-database employees \
+--create-hive-table \
+--m 1;
+
