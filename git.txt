@@ -20,6 +20,9 @@ git config --global user.email "caceres.rigo@gmail.com"
 git config --global user.name "alejandrarigo"
 a que  é: githubbrqale1
 
+Para listar o que temos no git:
+git config --list
+
 token por 60 dias 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
 
 --- Para verlo en forma de grafo pueden usarse las siguientes páginas
