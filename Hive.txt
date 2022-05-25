@@ -4,31 +4,32 @@
 
 
 
+--- Temos todo numa pasta do HDFS. Agora dentro do hive abrimos uma query e ali temos quecriar o data base
+--- isso qui está em linguagem java. Os tipos e dados são muito mais parecidos para o java que para o SQL
 
 create database locacao;
 
 
-
+--- criamos uma tabela que se chama clientes que está separada por virgula
+--- aqui estamos criando uma tabela externa, os dados não estão gerenciados pelo hive.
 CREATE EXTERNAL TABLE CLIENTES (idcliente int, cnh string, cpf string, validadecnh date, nome string, datacadastro date, datanascimento date, telefone string, status string) 
-
 row format delimited fields terminated by ', ' STORED as TEXTFILE;
 
-
-
+--- MUCHO CUIDADO DE DONDE CORRES LAS COSAS. ASEGURATE QUE EL BANCO QUE ESTÁS USANDO ES EL CORRECTO.
+--- aqui estamos carregando os dados do arquivo clientes.csv que já estava no HDFS para a tabela clientes do Hive que acabamos de criar
 LOAD DATA INPATH '/locacao/clientes.csv' INTO TABLE CLIENTES;
 
 
-
+--- vamos ver o que tem a tabela clientes
 SELECT * FROM CLIENTES;
 
 
-
-
+--- ELE PODE TER GUARDADO EM OUTRA PASTA: USER/HIVE/WAREHOUSE
+--- MESMA COISA COM AS OUTRAS TABELAS
 
 
 
 CREATE EXTERNAL TABLE VEICULOS (idveiculo int, dataaquisicao date, ano int , modelo string,
-
 placa string, status string, diaria double) row format delimited fields terminated by ', ' STORED as TEXTFILE;
 
 
@@ -43,7 +44,7 @@ SELECT * FROM VEICULOS;
 
 
 
-
+--- MESMA COISA QUE O ANTERIOR
 
 CREATE EXTERNAL TABLE DESPACHANTES (iddespachante int, nome string, status string , filial string) row format delimited fields terminated by ', ' STORED as TEXTFILE;
 
