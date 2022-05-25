@@ -1,0 +1,13 @@
+Para usar o scoop:
+
+sqoop import --connect jdbc:mysql://localhost:3306/retail_db \
+--username root \
+--password cloudera \
+--table orders \
+--hive-import \
+--create-hive-table \
+--hive-table locacao.orders \
+--m  1;
+
+Isso aqui pode ajudar para puxar datos, cria tabelas e fazer tudo isso de uma vez. 
+o scoop tem comandos para fazer jobs e automatizar isso. 
