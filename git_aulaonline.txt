@@ -1,0 +1,11 @@
+--- Abro uma pasta onde eu queira inicializar um repositório. Click direito GIT Bash HERE
+git init
+
+
+--- Isso inicializa um repositório vazio. Ele ainda não está no Git online. Ele está apenas no local. 
+---Temos que adicionar coisas aí. Se já tiver coisas nessas pasta pois temos que adicionálas com um 
+
+git add .
+--- ou 
+git add "nome_archivo_extension"
+
