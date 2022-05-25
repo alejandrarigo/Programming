@@ -1,0 +1,47 @@
+Github.txt
+
+---Para clonar um repositorio na máquina
+
+git clone https://github.com/alejandrarigo/curso-brq-big-data-2022-04-27.git 
+
+--Para saber o link do repositorio é só ir no github e ahí entrar no repositorio, dar em code e de novo em code tem uma aba e aí da para copiar.
+
+
+---para ver el estatus del repositorio
+git status 
+
+--- se cria um arquivo e depois deve se agregar (add) no rep local:
+git add teste.txt
+
+
+--- para configurar meu git:
+githubbrqalejandra
+git config --global user.email "caceres.rigo@gmail.com"
+git config --global user.name "alejandrarigo"
+a que  é: githubbrqale1
+
+token por 60 dias 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
+
+--- Para verlo en forma de grafo pueden usarse las siguientes páginas
+https://www.gitkraken.com/ 
+gitlens https://gitlens.amod.io
+gitgraph
+
+--- para criar uma branch que se chama nova-branch
+--- o usual é criar uma nova branch por programa que queramos modificar e depois que a gente tem certeza de que está correto, essa nova brancha vai para o master.
+git checkout -b nova-branch 
+
+========================================================================
+TEM ARCHIVOS QUE EU NAO QUERO SUBIR NO GIT:
+
+vou para  raiz do meu repositorio e crio um archivo que se chama .gitignore
+
+touch .gitignore no raiz, na principal do repositorio.
+
+volume/mysql/*  dentro do archivo .gitignore para ignorar todo o que está dentro (*) na pasta mysql 
+SÓ FUNCIONA QUANDO A PASTA NÃO ESTÁ NO REPOSITÓRIO. SI YA EXISTE, YA ERA. 
+
+=================================================================
+GIT DAS AULAS FABRICIO 
+https://github.com/ffborelli/curso-brq-big-data-2022-04-27
+
