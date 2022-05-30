@@ -20,6 +20,11 @@ row format delimited fields terminated by ', ' STORED as TEXTFILE;
 LOAD DATA INPATH '/locacao/clientes.csv' INTO TABLE CLIENTES;
 
 
+
+
+
+
+
 --- vamos ver o que tem a tabela clientes
 SELECT * FROM CLIENTES;
 
