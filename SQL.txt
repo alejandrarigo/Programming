@@ -1,0 +1,22 @@
+
+
+Variáveis em SQL
+
+só pode ser decimal, string ou varchar. Uma result table não pode ser uma variável. 
+
+
+
+# DECLARE @nome_var1 AS Tipo_var, @nome_var2 AS Tipo_var;
+
+Quando uma variável é iniciazada é NULL
+
+
+
+
+
+# Isso aqui da um valor para uma variável:
+
+SET @nome_var = valor
+
+
+
