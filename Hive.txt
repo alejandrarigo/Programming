@@ -14,6 +14,20 @@ create database locacao;
 --- aqui estamos criando uma tabela externa, os dados não estão gerenciados pelo hive.
 CREATE EXTERNAL TABLE CLIENTES (idcliente int, cnh string, cpf string, validadecnh date, nome string, datacadastro date, datanascimento date, telefone string, status string) 
 row format delimited fields terminated by ', ' STORED as TEXTFILE;
+-------------
+
+A diferencia entre tabela interna (tabela normal) e externa é que quando é externa e eu drop a tabela o archivo não vai embora mas se for interna quando eu deletar a tabela vai embora o archivo que usei para carregar. 
+
+
+CREATE TABLE ratings (
+  userid INT, 
+  movieid INT,
+  rating INT, 
+  tstamp STRING
+) ROW FORMAT DELIMITED
+FIELDS TERMINATED BY '#'
+STORED AS TEXTFILE;
+
 
 --- MUCHO CUIDADO DE DONDE CORRES LAS COSAS. ASEGURATE QUE EL BANCO QUE ESTÁS USANDO ES EL CORRECTO.
 --- aqui estamos carregando os dados do arquivo clientes.csv que já estava no HDFS para a tabela clientes do Hive que acabamos de criar
@@ -28,6 +42,7 @@ LOAD DATA INPATH '/locacao/clientes.csv' INTO TABLE CLIENTES;
 --- vamos ver o que tem a tabela clientes
 SELECT * FROM CLIENTES;
 
+Explain na frente de uma query ele da um explain das coisas que faz primeiro
 
 --- ELE PODE TER GUARDADO EM OUTRA PASTA: USER/HIVE/WAREHOUSE
 --- MESMA COISA COM AS OUTRAS TABELAS
@@ -62,9 +77,13 @@ LOAD DATA INPATH '/locacao/despachantes.csv' INTO TABLE DESPACHANTES;
 SELECT * FROM DESPACHANTES;
 
 
+-------------------------------------------------
+Para ver como está a tabela se é gerenciada ou não pelo hive. Um describe de uma tabela
 
 
+describe formatted nome_banco.nome_tabela;
 
+-------------------------------------------------------
 
 
 CREATE EXTERNAL TABLE LOCACAO (idlocacao int, idcliente int, iddespachante int , idveiculo int, datalocacao date, dataentrega date, total double) row format delimited fields terminated by ', ' STORED as TEXTFILE;
@@ -73,10 +92,25 @@ CREATE EXTERNAL TABLE LOCACAO (idlocacao int, idcliente int, iddespachante int ,
 
 LOAD DATA INPATH '/locacao/locacao.csv' INTO TABLE LOCACAO;
 
+PAARA NAO PEGAR A PRIMEIRA LINHA DE CABEÇALHO PÕE ISSO NO FINAL
+CREATE TABLE nome_tabela
+  ( 
+     name STRING, 
+     id   INT 
+  ) FORMAT BLA BLA
+row format delimited fields terminated BY '\t' lines terminated BY '\n' 
+tblproperties("skip.header.line.count"="1"); 
 
 
-SELECT * FROM LOCACAO;
+OU DEPOIS FAZ UM ALTER TABLE
 
+ALTER TABLE dbsus.tb_covid SET TBLPROPERTIES ("skip.header.line.count"="1");
+
+Para datas puede ayudar esse Replace para reemplazar /por -
+
+select '2022-04-05', year('2022-04-05'), month('2022-04-05'), 
+    day( regexp_replace('2022/04/05','/','-' ) ),
+    dayofmonth( regexp_replace('2022/04/05','/','-' ) );
 
 
 
