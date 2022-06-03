@@ -1,3 +1,20 @@
+STORED PROCEDURES:
+
+CREATE PROCEDURE nome_sp(
+    @var1 DECIMAL,
+    @var2 INT OUTPUT
+) AS
+BEGIN
+    SELECT 
+        product_name,
+        list_price
+    FROM
+        production.products
+    WHERE
+        model_year = @var1;
+
+    SELECT @product_count = @@ROWCOUNT;
+END;
 
 
 Variáveis em SQL
@@ -75,3 +92,106 @@ por exemplo, aqui esse CHAR() é uma função que recebe um número e devolve o 
 Note that the @@ROWCOUNT is a system variable that returns the number of rows affected by the last previous statement.
 
 ----------------------------------------
+O CASE com variáveis:
+
+BEGIN
+
+	DECLARE @Period INT = 1;
+
+	SELECT CASE
+		WHEN @Period = 1 THEN 'ROAD'
+		WHEN @Period = 2 THEN 'Mountain'
+		WHEN @Period = 3 THEN 'Touring'		
+		ELSE 'Other sale items'
+	END
+
+END
+
+
+-----------------------------------
+proc com while
+para deletar um proc
+
+drop proc qtdnumeros
+
+
+para criar um proc
+
+
+CREATE PROCEDURE qtdnumeros(
+	@valor DECIMAL,
+	@qtdmin int OUTPUT
+)AS
+BEGIN
+	DECLARE @cont DECIMAL = 0;
+	SET @qtdmin = 0;
+	WHILE @cont <@valor
+	BEGIN
+		SET @cont= @cont + convert(int,floor(rand()*1000))%101;
+		SET @qtdmin = @qtdmin +1;
+	END
+	PRINT @qtdmin;
+	PRINT @cont;
+END
+
+-- para chamar
+-- tem que declara a variável que recebe o output e vai junto
+DECLARE @quant INT;
+exec qtdnumeros @valor=1000, @qtdmin = @quant;
+
+
+--------------------------------------------
+O FETCH. SEMPRE AO CHAMAR UM CURSOR DEVEMOS CHAMOS UM FETCH. FETCH_STATUS É UMA VARIÁVEL GLOBAL PARA TODOS OS CURSORES.
+
+DEVEMOS FAZER SEMPRE A LEITURA ANTES DO FETCH. 
+
+
+DROP PROCEDURE IF EXISTS qtdOrders;
+GO
+
+CREATE PROCEDURE qtdOrders(
+	@valor DECIMAL
+)AS
+BEGIN
+	DECLARE @cont DECIMAL = 0;
+	declare @qtdmin int =0;
+	
+	DECLARE 
+    @order_date date, 
+    @id   int,
+	@sellprice decimal;
+
+	DECLARE cursor_prices CURSOR
+	FOR SELECT 
+        a.order_date, a.order_id, SUM(b.quantity * b.list_price*(1-b.discount)) as valor
+		FROM 
+			sales.order_items b 
+			inner join sales.orders a
+			on a.order_id = b.order_id
+		where a.order_status =4
+		group by a.order_date, a.order_id
+		order by a.order_date
+
+	OPEN cursor_prices;
+
+	FETCH NEXT FROM cursor_prices INTO @order_date, @id, @sellprice;
+
+	While @@FETCH_STATUS = 0 and @cont <@valor
+		begin
+			SET @cont= @cont + @sellprice;
+			SET @qtdmin = @qtdmin +1;
+
+			If @cont > = @valor
+				break;
+			FETCH NEXT FROM cursor_prices into @order_date, @id, @sellprice;  
+		end
+	Print @qtdmin;
+	Print @order_date;
+	Print @cont;
+
+	close cursor_prices;
+	Deallocate cursor_prices;
+END
+GO
+
+exec qtdOrders 200000;

@@ -11,7 +11,7 @@ Terceiro:
 vamos em outro shell 
 hbase shell
 
-Cuarto: Criamos a tabela
+Cuarto: Criamos a tascan 'bela
 
 create 'nome_tabela', 'nome_familia_coluna1','nome_familia_coluna2'
 SEM a ROW KEY
