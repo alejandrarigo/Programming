@@ -1,14 +1,14 @@
 
-------------------------------------------Hive--------------------------------------------------
+# Hive - First Chapter
 
 
+To create the database:
 
+```
 
---- Temos todo numa pasta do HDFS. Agora dentro do hive abrimos uma query e ali temos quecriar o data base
---- isso qui está em linguagem java. Os tipos e dados são muito mais parecidos para o java que para o SQL
+create database nome_database
 
-create database locacao;
-
+```
 
 --- criamos uma tabela que se chama clientes que está separada por virgula
 --- aqui estamos criando uma tabela externa, os dados não estão gerenciados pelo hive.
@@ -27,6 +27,24 @@ CREATE TABLE ratings (
 ) ROW FORMAT DELIMITED
 FIELDS TERMINATED BY '#'
 STORED AS TEXTFILE;
+
+
+CREATE TABLE `covid.covid_19_2`(
+	  `sno` int, 
+	  `observationdate` string, 
+	  `province` string, 
+	  `country` string, 
+	  `lastupdate` string, 
+	  `confirmed` int, 
+	  `deaths` int, 
+	  `recovered` int)
+ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.OpenCSVSerde'
+WITH SERDEPROPERTIES (
+   "separatorChar" = ",",
+   "quoteChar"     = "\""
+)   ;
+
+Aqui estamos dizendo que o separador é , e o quoteChar é aspas duplas ". ahí não quebra.
 
 
 --- MUCHO CUIDADO DE DONDE CORRES LAS COSAS. ASEGURATE QUE EL BANCO QUE ESTÁS USANDO ES EL CORRECTO.
@@ -144,66 +162,12 @@ select (veic.modelo), sum(loc.total) from locacao loc inner join veiculos veic o
 	having sum(loc.total ) > 5000;	
 
 
+## Final remarks:
 
-
-_________________________________ PARTIÇÕES NO HIVE
-O Hive pode ajudar melhorar a busca particionando por valor em certa coluna e põe num mesmo arquivo os comúns!
-
-criando a tabela stage
-    CREATE TABLE zipcodes_stage(
-    RecordNumber int,
-    Country string,
-    City string,
-    Zipcode int,
-    state string)
-    ROW FORMAT DELIMITED
-    FIELDS TERMINATED BY ',';
-
-criando a tabela
-
-Olha aqui! Tem uma partitioned by (state string) y ese state não é uma coluna da tabela como tal
-Podem ser feitas partições desde várias colunas!
-Dinámico: Ele decide os valores diferentes das partes, por exemplo por stados então ele vai cortando pelos valores que a coluna estados tem. 
-
-No estático a gente fala quais são as partes. A gente teria que carregar os dados pouco a pouco. 
-
-    CREATE TABLE zipcodes(
-    RecordNumber int,
-    Country string,
-    City string,
-    Zipcode int)
-    PARTITIONED BY(state string)
-    ROW FORMAT DELIMITED
-    FIELDS TERMINATED BY ',';
-
-
-Isso aqui para que seja dinámico o particionamento:
-
-set hive.exec.dynamic.partition.mode=nonstrict;
-
-
-Cuidar a ordem aqui: (Zipcode,state)
-
-insert overwrite table zipcodes partition(state)
-        select
-            RecordNumber int,
-            Country string,
-            City string,
-            Zipcode int,
-            state string
-        from zipcodes_stage;
-
-
-Ele mostra como criar a tabela covid_19 de una vez.
+--- Temos todo numa pasta do HDFS. Agora dentro do hive abrimos uma query e ali temos quecriar o data base
+--- isso qui está em linguagem java. Os tipos e dados são muito mais parecidos para o java que para o SQL
+--- Ele mostra como criar a tabela covid_19 de una vez.
 show create table movilens.covid_19;
-
-
-
-Bucket: muuuuitas categorias diferentes (dividir ID)
-Partition: poucas categorias diferentes (dividir estados)
---------------------------------------------------------------------------------------------
-
-
 
 hdfs dfs -rm -r /user/root/
 
