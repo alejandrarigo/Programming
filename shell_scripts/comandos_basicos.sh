@@ -29,7 +29,7 @@ rm -r diretorio-brq
 #   e deixar o mesmo aberto para vermos as novas linhas
 #   inseridas no final do arquivo
 
-#sleep 3
+sleep 3
 # serve para "dormir" (parar console) por x segundos
 
 touch arquivo.txt
@@ -53,46 +53,46 @@ echo "$DATAHORA usando PWD"
 pwd
 
 
-# man -> é o manual dos comandos linux
+ man -> é o manual dos comandos linux
 # Ex: man tail
 
-# wc nomearchivo.txt word count
+ wc nomearchivo.txt word count
 #conta linhas, frases caracteres de um arquivo
 
-#pipe | serve para pegar o resultado de um comando e inserir como entrada no seguinte. Por exemplo?
+pipe | serve para pegar o resultado de um comando e inserir como entrada no seguinte. Por exemplo?
 tail arquivo.txt | wc #ahi do tail desse archivo vai fazer a contagem
 
-#1>2 ele pega un comando que esta no 1 e joga no arquivo que esta no 2. Se o arquivo nao existe, ele cria.
+1>2 ele pega un comando que esta no 1 e joga no arquivo que esta no 2. Se o arquivo nao existe, ele cria.
 
 tail prova1.txt >>prova2.txt # com >> ele não sobrescreve mas poe no final da linha
-#grep procura uma palabra num archivo
-#grep -i Grep primeiro_script.sh  insencitivo no distingue mayusculas y minusculas
-#grep -ic Grep primeiro_script.sh -ic conta quantas vezes aparece ai
-#grep -n Grep primeiro_script.sh diz todas as aparições e o numero da linha
-#grep -n ar.*o primeiro_script.sh começa em ar e acaba em o e não importa o que está no meio
-#grep -r frase Ele procura "frase" em todos os archivos dentro de uma pasta
-#grep -r frase  /home/virtual/ procura na pasta que eu quero
+grep procura uma palabra num archivo
+grep -i Grep primeiro_script.sh  insencitivo no distingue mayusculas y minusculas
+grep -ic Grep primeiro_script.sh -ic conta quantas vezes aparece ai
+grep -n Grep primeiro_script.sh diz todas as aparições e o numero da linha
+grep -n ar.*o primeiro_script.sh começa em ar e acaba em o e não importa o que está no meio
+grep -r frase Ele procura "frase" em todos os archivos dentro de uma pasta
+grep -r frase  /home/virtual/ procura na pasta que eu quero
 
 # wget faz download de um arquivo 
-#wget https://cursos.grandeporte.com.br/files/brq/big-data/datasets/cars1.csv faz o download de um arquivo
+wget https://cursos.grandeporte.com.br/files/brq/big-data/datasets/cars1.csv faz o download de um arquivo
 #gnumeric cambia .xls (excel) para .csv convert
-#egrep "a[r]*" prova2.txt procura o que tenha a e r 0, 1 ou muitas ocurrencias
-#egrep "a[r]+" prova2.txt procura o que tenha a e r em 1 ou muitas ocurrencias
-#egrep "a[r]?" prova2.txt procura o que tenha a e r em 0 ou 1 ocurrencias
+egrep "a[r]*" prova2.txt #procura o que tenha a e r 0, 1 ou muitas ocurrencias
+egrep "a[r]+" prova2.txt #procura o que tenha a e r em 1 ou muitas ocurrencias
+egrep "a[r]?" prova2.txt #procura o que tenha a e r em 0 ou 1 ocurrencias
 
 #TUDO PARA PARAR NO TERMINAL E CTRL + C
 
 #diff mostra as diferencias entre dois archivos,  usualmente se faz web. tippo git
 
-# date ; echo "texto" comandos em sequencia se o primeiro dar erro igual executa o segundo
-#date &&  echo "texto" primeiro executa o primeiro e se nao da erro executa o segundo
-# date &  echo "texto" executa o primeiro em segundo plano
+date ; echo "texto" #comandos em sequencia se o primeiro dar erro igual executa o segundo
+date &&  echo "texto" #primeiro executa o primeiro e se nao da erro executa o segundo
+ date &  echo "texto" #executa o primeiro em segundo plano
 
-#find -name 'a*' busca todos os arquivo e pastas que tem a, com nomes nisso
+find -name 'a*' busca todos os arquivo e pastas que tem a, com nomes nisso
 
 
 #para passaar argumentos: Sempre $0 é o nome do script
-:<<"SCLM"
+
 echo "Nome do script $0" 
 echo "Quantidade de argumentos: $#" #Depois do nome do 
 echo "Nome do script $1" 
@@ -112,9 +112,9 @@ SCLM
 ## operators
 
 
-# igualdade é -eq (equal)
-# -ge greater than or equal to
-# -le less than or equal to
+ igualdade é -eq (equal)
+-ge greater than or equal to
+-le less than or equal to
 echo $#
 if [ $# -eq 0 ] #Preciso dos espaços entre os colchetes. 
 then 
