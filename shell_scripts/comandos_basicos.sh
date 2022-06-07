@@ -14,7 +14,6 @@ mkdir -p diretorio-brq
 # Se usarmos o parâmetro -p, permite criar
 #   pastas não existentes ou não apresentar erros
 #   quando a pasta já existe
-# ex: mkdir -p diretorio-brq
 
 ls -ls
 # ls lista todas as pastas do diretório de interesse junto
@@ -24,10 +23,12 @@ rm -r diretorio-brq
 # rm deleta arquivos ou pastas de interesse.
 # para deletar uma pasta, devemos passar o parâmetro -r (recursivo) 
 
-#tail -f arquivo.txt
+tail -f arquivo.txt
 # serve para mostrar as últimas linhas de um aquivo
 #   e deixar o mesmo aberto para vermos as novas linhas
 #   inseridas no final do arquivo
+/dev/null é um buraco negro para erros aos quais podemos mandar mensagens de erro
+
 
 sleep 3
 # serve para "dormir" (parar console) por x segundos

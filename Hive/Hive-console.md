@@ -27,3 +27,13 @@ hive -e 'SELECT * FROM database.tabela WHERE Condition' | sed 's/[\t]/,/g'  >  c
 sed 's/[\t]/,/g' replace o que é tab por ,
 
 
+## Para executar um script hive por consola linux
+
+```
+hive -f script_hive.sql
+```
+Ele traz com TAB. Para trazer com ;
+
+```
+hive -f script_hive.sql | sed 's/[\t]/;/g'
+```
