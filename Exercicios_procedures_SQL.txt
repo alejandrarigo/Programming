@@ -1,0 +1,174 @@
+Atividade Stored Procedure
+
+1 - inserir pedido
+brq_sp_insped
+
+2 - o valor vendido da marca
+brq_sp_vendamarca
+
+3 - atualiza o preco do produto dado o % e a marca
+brq_sp_mexepreco
+
+4 - excluir vendas de uma marca.
+brq_sp_matavenda
+
+
+1-
+
+-- Primeiro exercício: Fazer uma Stored Procedure para inserir um pedido.
+
+
+DROP PROCEDURE IF EXISTS brq_sp_insped;
+
+GO
+
+CREATE PROCEDURE brq_sp_insped(--from order
+	@customer_id INT,
+	@order_status tinyint,
+	@order_date DATE,
+	@required_date DATE,
+	@shipped_date DATE,
+	@store_id INT,
+	@staff_id INT,
+	--from item
+	@product_id INT,
+	@quantity INT,
+	@list_price DECIMAL(10, 2),
+	@discount DECIMAL(4, 2)
+)AS
+BEGIN
+	
+	BEGIN TRY
+		-- Inserimos o pedido em orders
+		INSERT INTO sales.orders(customer_id,order_status, order_date, required_date, shipped_date, store_id,staff_id) 
+		VALUES(@customer_id,@order_status, @order_date, @required_date, @shipped_date, @store_id,@staff_id); 
+	
+		declare @order_id INT;
+		set @order_id = (select scope_identity());
+
+		-- Inserimos o item em order_items
+		declare @item_id int;
+		set @item_id= 1;--(select count(*) from sales.order_items)+1;
+
+		INSERT INTO sales.order_items(order_id, item_id, product_id, quantity, list_price,discount) 
+		VALUES(@order_id, @item_id, @product_id, @quantity, @list_price, @discount);
+	
+		PRINT 'Insersão completa.';
+	END TRY
+
+	BEGIN CATCH
+		--exec usp_report_error;
+	END CATCH
+END
+
+GO
+--Para fazer a execução
+DECLARE @customer_id INT, 
+	    @order_status tinyint,
+		@order_date DATE,
+		@required_date DATE,
+		@shipped_date DATE,
+		@store_id INT,
+		@staff_id INT,
+		@item_id INT,
+		@product_id INT,
+		@quantity INT,
+		@list_price DECIMAL(10, 2),
+		@discount DECIMAL(4, 2);
+
+GO
+
+exec brq_sp_insped @customer_id=978,
+	@order_status=4,
+	@order_date = '20220910',
+	@required_date ='20220922',
+	@shipped_date ='20220920',
+	@store_id =2,
+	@staff_id =6,
+	--from item
+	@product_id =20,
+	@quantity =2,
+	@list_price =599.99,
+	@discount = 0.2;
+
+GO
+
+DROP PROC brq_sp_insped;
+
+2- 
+
+-- Deletando se existir
+drop proc if exists brq_sp_vendamarca;
+go
+
+--criando o proc. Recebe 
+create proc brq_sp_vendamarca(
+	@nome_marca Varchar(20),
+	@valor DECIMAL(20,4) OUTPUT
+)AS
+BEGIN
+	BEGIN TRY
+		set @valor = (select coalesce(sum (c.list_price * c.quantity * (1.0 - c.discount)),0) as valor
+					from production.brands a
+						inner join production.products b on a.brand_id = b.brand_id
+						inner join sales.order_items c on b.product_id = c.product_id
+						inner join sales.orders d on c.order_id = d.order_id
+					where a.brand_name = @nome_marca and d.order_status = 4);
+	END TRY
+
+	BEGIN CATCH
+		exec usp_report_error;
+	END CATCH
+
+END
+
+
+4- 
+
+
+-- Deletando se existir
+drop proc if exists brq_sp_matavenda;
+go
+
+--criando o proc. Recebe 
+create proc brq_sp_matavenda(
+	@nome_marca Varchar(20)
+)AS
+BEGIN
+	BEGIN TRY
+		 delete from sales.order_items
+		 where sales.order_items.product_id in (select p.product_id
+									from production.products p 
+									inner join production.brands b on p.brand_id = b.brand_id
+									where b.brand_name = @nome_marca
+								);
+		 delete from sales.orders
+		 where sales.orders.order_id not in (select distinct sales.order_items.order_id from sales.order_items);
+		
+		print 'Done!';
+
+	END TRY
+
+	BEGIN CATCH
+		exec usp_report_error;
+	END CATCH
+
+END
+
+GO
+
+
+--executamos
+exec brq_sp_matavenda 
+	@nome_marca = ''
+
+GO
+--declaramos a variável output
+Declare @valor_t decimal(20,2);
+
+--executamos
+exec brq_sp_vendamarca 
+	@nome_marca = 'Electra',
+	@valor = @valor_t OUTPUT;
+
+Print 'Valor total da marca é ' + Cast(@valor_t as varchar);

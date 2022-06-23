@@ -1,0 +1,29 @@
+-- SYS_CONTEXT returns the value of parameter associated with the context namespace. You can use this function in both SQL and PL/SQL statements.
+
+--For namespace and parameter, you can specify either a string or an expression that resolves to a string designating a namespace or an attribute. The context namespace must already have been created, and the associated parameter and its value must also have been set using the DBMS_SESSION.set_context procedure. The namespace must be a valid SQL identifier. The parameter name can be any string. It is not case sensitive, but it cannot exceed 30 bytes in length.
+
+--The datatype of the return value is VARCHAR2. 
+
+
+https://datacadamia.com/db/oracle/context
+
+SELECT SYS_CONTEXT ('USERENV', 'SESSION_USER')  FROM DUAL;
+SELECT USERENV('SESSIONID') FROM DUAL;
+select USERENV('LANGUAGE') from dual;
+SELECT SYS_CONTEXT ('USERENV', 'CURRENT_SCHEMA')  FROM DUAL;
+
+
+--Primeiro precisa criar os pacotes para criar as variáveis de contexto
+
+
+CREATE OR REPLACE
+PACKAGE set_context_variable_package
+IS
+
+PROCEDURE set_empno;
+
+PROCEDURE set_variable_value(
+    n VARCHAR2,
+    v VARCHAR2);
+
+END set_context_variable_package;

@@ -120,6 +120,11 @@ row format delimited fields terminated BY '\t' lines terminated BY '\n'
 tblproperties("skip.header.line.count"="1"); 
 
 
+
+Para depois de lida a tabela com cabeçalho tirar ele da tabela:
+-- REMOVENDO A PRIMEIRA LINHA DA TABELA
+ALTER TABLE db_births.tb_babies SET TBLPROPERTIES ("skip.header.line.count"="1");
+
 OU DEPOIS FAZ UM ALTER TABLE
 
 ALTER TABLE dbsus.tb_covid SET TBLPROPERTIES ("skip.header.line.count"="1");

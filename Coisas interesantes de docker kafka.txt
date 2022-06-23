@@ -1,0 +1,13 @@
+Fabrizio Borelli14:09
+https://github.com/ffborelli/curso-brq-big-data-2022-04-27.git
+https://github.com/ffborelli/curso-brq-big-data-2022-04-27.git
+git clone https://github.com/ffborelli/curso-brq-big-data-2022-04-27.git
+Fabrizio Borelli14:13
+docker-compose up
+Fabrizio Borelli14:15
+nano docker-compose.yml
+3.3
+Fabrizio Borelli14:24
+Original
+
+https://github.com/JHLeeeMe/fake-data-pipeline/blob/master/README.md

@@ -1,0 +1,122 @@
+use Bikestore;
+CREATE TABLE TABLE_logs (
+    log_id INT IDENTITY PRIMARY KEY,
+    event_data XML NOT NULL,
+    changed_by SYSNAME NOT NULL
+);
+GO
+
+CREATE TRIGGER trg_index_changes
+ON DATABASE
+FOR	
+    CREATE_TABLE,
+    ALTER_TABLE, 
+    DROP_TABLE
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    INSERT INTO table_logs (
+        event_data,
+        changed_by
+    )
+    VALUES (
+        EVENTDATA(),
+        USER
+    );
+END;
+GO
+
+CREATE NONCLUSTERED INDEX nidx_fname
+ON sales.customers(first_name);
+GO
+
+CREATE NONCLUSTERED INDEX nidx_lname
+ON sales.customers(last_name);
+GO
+
+
+CREATE TABLE table_logs (
+    log_id INT IDENTITY PRIMARY KEY,
+    event_data XML NOT NULL,
+    changed_by SYSNAME NOT NULL
+);
+GO
+
+CREATE OR ALTER TRIGGER trg_table_changes
+ON DATABASE
+FOR	
+    CREATE_TABLE,
+    ALTER_TABLE, 
+    DROP_TABLE
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    INSERT INTO table_logs (
+        event_data,
+        changed_by
+    )
+    VALUES (
+        EVENTDATA(),
+        USER
+    );
+END;
+GO
+
+
+
+
+CREATE TABLE  nova_table(
+	Id Int
+)
+
+GO 
+
+SELECT * FROM table_logs
+
+DROP TABLE nova_table
+
+
+
+
+CREATE TABLE table_teste_logs (
+    log_id INT IDENTITY PRIMARY KEY,
+    event_data XML NOT NULL,
+    changed_by SYSNAME NOT NULL
+)
+
+select * from table_teste_logs
+------------------------------------------------
+CREATE OR ALTER TRIGGER trg_table_teste_changes
+ON DATABASE
+FOR	
+    CREATE_TABLE,
+    ALTER_TABLE, 
+    DROP_TABLE
+AS
+BEGIN
+    SET NOCOUNT ON;
+	DECLARE @Data XML  
+	DECLARE @ObjectType nvarchar(100)
+	DECLARE @ObjectName nvarchar(100)
+    SET @Data = EventData()
+	SET @ObjectType = @DATA.value('(/EVENT_INSTANCE/ObjectType)[1]', 'nvarchar(100)')
+	SET @ObjectName = @DATA.value('(/EVENT_INSTANCE/ObjectName)[1]', 'nvarchar(100)')
+    PRINT @ObjectType
+    PRINT @ObjectName
+	IF (@ObjectName = 'Teste') 
+	BEGIN
+		INSERT INTO table_teste_logs (
+			event_data,
+			changed_by
+		)
+		VALUES (
+			EVENTDATA(),
+			USER
+		);
+	END
+END
+
+create table teste1(
+id int)
